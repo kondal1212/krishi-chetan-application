@@ -27,7 +27,7 @@ public class VisionAgentService {
     }
 
     public VisionResult analyzeImage(byte[] imageBytes) {
-        String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + apiKey;
+        String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=" + apiKey;
 
         try {
             String base64Image = Base64.getEncoder().encodeToString(imageBytes);

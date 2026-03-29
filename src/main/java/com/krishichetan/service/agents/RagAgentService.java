@@ -27,6 +27,22 @@ public class RagAgentService {
                     List.of("Remove fallen diseased leaves", "Improve canopy ventilation", "Apply copper-based organic fungicide"),
                     "National Horticulture Board"
             );
+        } else if (disease.contains("rice blast") || disease.contains("rice whitefly") || disease.contains("తెల్లదోమ")) {
+            return new RagResult(
+                    "Install yellow sticky traps and apply Neem oil (10000 ppm @ 3ml/L) or Beauveria bassiana.",
+                    List.of(
+                            "Drain water from the field for 3 to 4 days to reduce humidity at the base of the plants.",
+                            "Install 10-15 yellow sticky traps per acre to attract and catch adult flies.",
+                            "Spray neem oil solution directly targeting the base and lower stems of the paddy where pests hide."
+                    ),
+                    "Rice Knowledge Management Portal (RKMP) Best Practices"
+            );
+        } else if (disease.contains("grow") || disease.contains("నాటాలి")) {
+            return new RagResult(
+                    "Based on your black soil and Hyderabad's heat, we recommend Millet or Marigold.",
+                    List.of("Prepare soil with 20% vermicompost", "Sow seeds at 2-inch depth", "Water every 3 days"),
+                    "Beginner's Guide to Organic Farming"
+            );
         }
 
         // Generic fallback for unrecognized diseases
