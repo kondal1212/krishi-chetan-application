@@ -4,8 +4,6 @@ import com.krishichetan.dto.RagResult;
 import com.krishichetan.dto.VisionResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
 import java.util.List;
 
 @Service
@@ -13,24 +11,29 @@ import java.util.List;
 public class RagAgentService {
 
     public RagResult fetchContext(VisionResult vision) {
-        log.info("[RagAgent] Fetching solution for {}", vision.disease());
+        log.info("[RagAgent] Fetching agricultural manual context for: {}", vision.disease());
 
-        if (vision.disease().equalsIgnoreCase("Powdery Mildew")) {
+        String disease = vision.disease().toLowerCase();
+
+        if (disease.contains("powdery mildew")) {
             return new RagResult(
-                    "Use neem oil (3ml/L) or milk spray",
-                    List.of(
-                            "Prune infected leaves",
-                            "Prepare neem solution",
-                            "Spray twice weekly"
-                    ),
+                    "Use neem oil (3ml/L) or a 10% milk-water spray solution.",
+                    List.of("Prune heavily infected leaves", "Prepare neem solution", "Spray uniformly in the early morning"),
                     "ICAR Organic Farming Manual"
+            );
+        } else if (disease.contains("anthracnose")) {
+            return new RagResult(
+                    "Apply 1% Bordeaux mixture or Trichoderma viride.",
+                    List.of("Remove fallen diseased leaves", "Improve canopy ventilation", "Apply copper-based organic fungicide"),
+                    "National Horticulture Board"
             );
         }
 
+        // Generic fallback for unrecognized diseases
         return new RagResult(
-                "Apply organic compost",
-                List.of("Add compost", "Water properly"),
-                "Fallback knowledge"
+                "Ensure proper soil nutrition and moisture management.",
+                List.of("Apply organic compost", "Check soil drainage", "Monitor daily"),
+                "General Agricultural Best Practices"
         );
     }
 }

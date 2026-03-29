@@ -12,8 +12,4 @@ public class KrishiChetanApplication {
 		SpringApplication.run(KrishiChetanApplication.class, args);
 	}
 
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
 }

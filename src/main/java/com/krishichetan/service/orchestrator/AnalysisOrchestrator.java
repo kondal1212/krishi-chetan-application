@@ -27,8 +27,7 @@ public class AnalysisOrchestrator {
             RagAgentService ragAgent,
             WeatherAgentService weatherAgent,
             RecommendationAgentService recommendationAgent,
-            VoiceAgentService voiceAgent
-    ) {
+            VoiceAgentService voiceAgent) {
         this.visionAgent = visionAgent;
         this.ragAgent = ragAgent;
         this.weatherAgent = weatherAgent;
@@ -40,34 +39,34 @@ public class AnalysisOrchestrator {
             MultipartFile image,
             MultipartFile audio,
             String location,
-            String language
-    ) {
+            String language) {
 
         List<String> traceLogs = new ArrayList<>();
 
         try {
-            // Voice
+            // 1. Voice
             String voiceText = voiceAgent.transcribeAudio(audio);
-            traceLogs.add("Voice transcribed");
+            traceLogs.add("Voice transcribed successfully");
 
-            // Vision
+            // 2. Vision
             VisionResult vision = visionAgent.analyzeImage(image.getBytes());
             traceLogs.add("Vision analysis completed: " + vision.disease());
 
-            // RAG
+            // 3. RAG
             RagResult rag = ragAgent.fetchContext(vision);
-            traceLogs.add("RAG retrieved organic solution");
+            traceLogs.add("RAG retrieved organic solution from: " + rag.source());
 
-            // Weather
+            // 4. Weather
             WeatherResult weather = weatherAgent.getCurrentWeather(location);
-            traceLogs.add("Weather data fetched");
+            traceLogs.add("Weather data fetched for: " + location);
 
-            // Final
-            FinalRecommendation finalRec =
-                    recommendationAgent.generate(vision, rag, weather, voiceText, language);
+            // 5. Final LLM Generation
+            FinalRecommendation finalRec = recommendationAgent.generate(
+                    vision, rag, weather, voiceText, language
+            );
+            traceLogs.add("Final recommendation generated via Gemini");
 
-            traceLogs.add("Final recommendation generated");
-
+            // 6. Construct the final 7-argument record
             return new FinalRecommendation(
                     finalRec.problem(),
                     finalRec.confidence(),
@@ -75,12 +74,21 @@ public class AnalysisOrchestrator {
                     finalRec.steps(),
                     finalRec.weatherAdjustment(),
                     finalRec.languageOutput(),
-                    traceLogs
+                    traceLogs // Injecting the logs here
             );
 
         } catch (Exception e) {
-            log.error("Orchestration failed", e);
-            throw new RuntimeException("Processing failed");
+            log.error("[Orchestrator] Pipeline failed", e);
+
+            return new FinalRecommendation(
+                    "System Error",
+                    0.0,
+                    "Unable to process request",
+                    List.of("Retry", "Check input"),
+                    "Check weather manually",
+                    "సిస్టమ్ లోపం",
+                    List.of("Failure in pipeline")
+            );
         }
     }
 }
