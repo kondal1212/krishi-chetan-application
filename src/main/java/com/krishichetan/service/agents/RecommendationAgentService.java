@@ -31,7 +31,7 @@ public class RecommendationAgentService {
     }
 
     public FinalRecommendation generate(VisionResult vision, RagResult rag, WeatherResult weather, String voiceText, String language) {
-        String url = "[https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=](https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=)" + apiKey;
+        String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + apiKey;
 
         // Structured prompt to force Gemini to return valid JSON
         String prompt = String.format(
